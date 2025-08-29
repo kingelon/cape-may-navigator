@@ -16,6 +16,8 @@ docs
 # next.js
 /.next/
 /out/
+dist/
+.sanity/
 
 # production
 /build
