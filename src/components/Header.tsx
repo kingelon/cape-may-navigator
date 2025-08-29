@@ -41,23 +41,38 @@ export default function Header({ title, backHref, backText, menuForPropertySlug,
                 <span aria-hidden>≡</span>
               </button>
               {open && (
-                <nav className="absolute left-0 mt-2 w-56 rounded-xl border border-neutral-800 bg-neutral-900/95 shadow-lg backdrop-blur p-1">
+                <nav className="absolute left-0 mt-2 w-56 rounded-xl border border-neutral-800 bg-neutral-900/95 shadow-lg backdrop-blur p-2 space-y-1 text-sm">
                   <Link href="/" className="block rounded-lg px-3 py-2 hover:bg-neutral-800" onClick={() => setOpen(false)}>
                     Home
                   </Link>
-                  {menuForPropertySlug && (
-                    <>
-                      <Link href={`/${menuForPropertySlug}`} className="block rounded-lg px-3 py-2 hover:bg-neutral-800" onClick={() => setOpen(false)}>
-                        Property Home
-                      </Link>
-                      <Link href={`/${menuForPropertySlug}/guides`} className="block rounded-lg px-3 py-2 hover:bg-neutral-800" onClick={() => setOpen(false)}>
-                        Guides
-                      </Link>
-                      <Link href={`/${menuForPropertySlug}/recommendations`} className="block rounded-lg px-3 py-2 hover:bg-neutral-800" onClick={() => setOpen(false)}>
-                        Recommendations
-                      </Link>
-                    </>
-                  )}
+                  <Link
+                    href={menuForPropertySlug ? `/${menuForPropertySlug}/guides` : `/guides`}
+                    className="block rounded-lg px-3 py-2 hover:bg-neutral-800"
+                    onClick={() => setOpen(false)}
+                  >
+                    Guides
+                  </Link>
+                  <Link
+                    href={menuForPropertySlug ? `/${menuForPropertySlug}/recommendations` : `/recommendations`}
+                    className="block rounded-lg px-3 py-2 hover:bg-neutral-800"
+                    onClick={() => setOpen(false)}
+                  >
+                    Recommendations
+                  </Link>
+                  <Link
+                    href="/activities"
+                    className="block rounded-lg px-3 py-2 hover:bg-neutral-800"
+                    onClick={() => setOpen(false)}
+                  >
+                    Activities
+                  </Link>
+                  <Link
+                    href="/about"
+                    className="block rounded-lg px-3 py-2 hover:bg-neutral-800"
+                    onClick={() => setOpen(false)}
+                  >
+                    About Us
+                  </Link>
                 </nav>
               )}
             </div>
