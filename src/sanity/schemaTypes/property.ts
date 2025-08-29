@@ -1,4 +1,4 @@
-import {defineField, defineType} from 'sanity'
+import {defineArrayMember, defineField, defineType} from 'sanity'
 
 export const propertyType = defineType({
   name: 'property',
@@ -9,6 +9,14 @@ export const propertyType = defineType({
       name: 'name',
       title: 'Name',
       type: 'string',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      options: { source: 'name' },
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'welcomeMessage',
@@ -37,6 +45,28 @@ export const propertyType = defineType({
       type: 'array',
       of: [{ type: 'string' }],
       description: 'Add one step per item for a clear checklist',
+    }),
+    defineField({
+      name: 'guides',
+      title: 'Property Guides',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'reference',
+          to: { type: 'guide' },
+        }),
+      ],
+    }),
+    defineField({
+      name: 'recommendations',
+      title: 'Local Recommendations',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'reference',
+          to: { type: 'recommendation' },
+        }),
+      ],
     }),
   ],
 })
