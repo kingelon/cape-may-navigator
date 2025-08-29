@@ -34,7 +34,9 @@ export const propertyType = defineType({
     defineField({
       name: 'checkoutProcedure',
       title: 'Check-out Procedure',
-      type: 'text',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'Add one step per item for a clear checklist',
     }),
   ],
 })

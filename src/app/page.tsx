@@ -9,7 +9,7 @@ type Property = {
   mainImageUrl?: string
   wifiNetwork?: string
   wifiPassword?: string
-  checkoutProcedure?: string
+  checkoutProcedure?: string[] | string
 }
 
 async function fetchProperties(): Promise<Property[]> {
@@ -41,12 +41,14 @@ export default async function Home() {
     )
   }
 
-  const checkoutSteps = property.checkoutProcedure
-    ? property.checkoutProcedure
-        .split('\n')
-        .map((s) => s.trim())
-        .filter(Boolean)
-    : []
+  const checkoutSteps = Array.isArray(property.checkoutProcedure)
+    ? property.checkoutProcedure.filter(Boolean).map((s) => s.trim())
+    : (property.checkoutProcedure
+        ? property.checkoutProcedure
+            .split('\n')
+            .map((s) => s.trim())
+            .filter(Boolean)
+        : [])
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
