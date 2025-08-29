@@ -1,5 +1,4 @@
 import Header from '@/components/Header'
-import FabMenu from '@/components/FabMenu'
 import { client } from '@/sanity/lib/client'
 import { groq } from 'next-sanity'
 

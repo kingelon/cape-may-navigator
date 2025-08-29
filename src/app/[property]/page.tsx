@@ -1,5 +1,4 @@
 import Header from '@/components/Header'
-import FabMenu from '@/components/FabMenu'
 import Card from '@/components/Card'
 import Button from '@/components/Button'
 import { client } from '@/sanity/lib/client'
