@@ -9,8 +9,8 @@ type ButtonProps = {
 export default function Button({ href, children, variant = 'primary' }: ButtonProps) {
   const classes =
     variant === 'primary'
-      ? 'inline-flex items-center justify-center rounded-lg bg-neutral-900 text-white px-4 h-10 hover:bg-neutral-800'
-      : 'inline-flex items-center justify-center rounded-lg border border-neutral-300 px-4 h-10 hover:bg-neutral-100'
+      ? 'inline-flex items-center justify-center rounded-lg bg-white text-neutral-900 px-4 h-10 hover:bg-neutral-200'
+      : 'inline-flex items-center justify-center rounded-lg border border-neutral-700 text-white px-4 h-10 hover:bg-neutral-800'
 
   if (href) {
     return (
@@ -22,4 +22,3 @@ export default function Button({ href, children, variant = 'primary' }: ButtonPr
 
   return <button className={classes}>{children}</button>
 }
-

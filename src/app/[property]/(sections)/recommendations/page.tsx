@@ -43,3 +43,4 @@ export default async function RecommendationsIndex({ params }: Props) {
     </div>
   )
 }
+

@@ -1,3 +1,4 @@
+import Header from '@/components/Header'
 import Card from '@/components/Card'
 import Button from '@/components/Button'
 import { client } from '@/sanity/lib/client'
@@ -8,7 +9,7 @@ export const dynamic = 'force-static'
 
 type Params = { params: Promise<{ property: string }> }
 
-type GuideLink = { title: string; slug: string }
+type GuideLink = { title: string; slug: string; mainImageUrl?: string }
 type RecommendationLink = {
   name: string
   category?: string
@@ -40,7 +41,7 @@ async function fetchProperty(slug: string): Promise<PropertyDetail | null> {
     wifiNetwork,
     wifiPassword,
     checkoutProcedure,
-    guides[]->{ title, "slug": slug.current },
+    guides[]->{ title, "slug": slug.current, "mainImageUrl": mainImage.asset->url },
     recommendations[]->{ name, category, "slug": slug.current, "mainImageUrl": mainImage.asset->url }
   }`
   return client.fetch(query, { slug })
@@ -59,7 +60,9 @@ export default async function PropertyHome({ params }: Params) {
     : []
 
   return (
-    <div className="space-y-8">
+    <div>
+      <Header title={property.name || 'Property'} backHref="/" backText="Home" />
+      <div className="max-w-4xl mx-auto px-4 py-6 space-y-8">
       {property.mainImageUrl && (
         <div className="w-full h-48 sm:h-64 md:h-80 overflow-hidden rounded-xl relative">
           <Image
@@ -73,12 +76,12 @@ export default async function PropertyHome({ params }: Params) {
       )}
 
       {property.welcomeMessage && (
-        <p className="text-lg text-neutral-700">{property.welcomeMessage}</p>
+        <p className="text-lg text-neutral-300">{property.welcomeMessage}</p>
       )}
 
       {(property.wifiNetwork || property.wifiPassword) && (
-        <section className="rounded-lg border border-neutral-200 p-5 bg-neutral-50">
-          <h2 className="text-xl font-semibold mb-3">Wi‑Fi Details</h2>
+        <section className="rounded-xl border border-neutral-800 p-5 bg-neutral-900 text-neutral-200 shadow-sm">
+          <h2 className="text-xl font-semibold text-white tracking-tight mb-3">Wi‑Fi Details</h2>
           <div className="space-y-1">
             {property.wifiNetwork && (
               <p>
@@ -88,7 +91,7 @@ export default async function PropertyHome({ params }: Params) {
             {property.wifiPassword && (
               <p>
                 <span className="font-semibold">Password:</span>{' '}
-                <code className="font-mono px-1 py-0.5 rounded bg-neutral-200/60">
+                <code className="font-mono px-1 py-0.5 rounded bg-neutral-800 text-neutral-100">
                   {property.wifiPassword}
                 </code>
               </p>
@@ -98,11 +101,11 @@ export default async function PropertyHome({ params }: Params) {
       )}
 
       {checkoutSteps.length > 0 && (
-        <section className="rounded-lg border border-neutral-200 p-5">
-          <h2 className="text-xl font-semibold mb-3">Check‑out Procedure</h2>
-          <ol className="list-decimal list-inside space-y-1 text-neutral-800">
+        <section className="rounded-xl border border-neutral-800 p-5 bg-neutral-900 text-neutral-200 shadow-sm">
+          <h2 className="text-xl font-semibold text-white tracking-tight mb-3">Check‑out Procedure</h2>
+          <ol className="list-decimal list-inside pl-5 space-y-2 marker:text-neutral-500">
             {checkoutSteps.map((step: string, idx: number) => (
-              <li key={idx}>{step}</li>
+              <li key={idx} className="leading-relaxed">{step}</li>
             ))}
           </ol>
         </section>
@@ -112,15 +115,13 @@ export default async function PropertyHome({ params }: Params) {
         <section>
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-xl font-semibold">Property Guides</h2>
-            <Button href={`/${propertySlug}/guide/wifi-details`} variant="secondary">
-              Example
-            </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {property.guides.map((g: GuideLink) => (
               <Card
                 key={g.slug}
                 href={`/${propertySlug}/guide/${g.slug}`}
+                imageUrl={g.mainImageUrl}
                 title={g.title}
                 description={null}
               />
@@ -150,6 +151,7 @@ export default async function PropertyHome({ params }: Params) {
           </div>
         </section>
       ) : null}
+      </div>
     </div>
   )
 }

@@ -58,34 +58,39 @@ export default async function RecommendationPage({ params }: Props) {
   const rec = await fetchRec(slug)
   if (!rec) return <div>Recommendation not found</div>
   return (
-    <article className="space-y-4">
+    <article className="space-y-4 text-neutral-200">
       {rec.mainImageUrl && (
-        <div className="relative w-full h-56">
+        <div className="relative w-full h-56 rounded-lg overflow-hidden border border-neutral-800 bg-neutral-900">
           <Image
             src={rec.mainImageUrl}
             alt={rec.name}
             fill
             sizes="100vw"
-            className="object-cover rounded-lg"
+            className="object-cover"
           />
         </div>
       )}
-      <h1 className="text-2xl font-semibold">{rec.name}</h1>
-      <p className="text-sm text-neutral-600">{rec.category}</p>
-      {rec.description ? <SimplePortableText value={rec.description} /> : null}
+      <section className="rounded-lg border border-neutral-800 bg-neutral-900 p-5">
+        <h1 className="text-2xl font-semibold text-white">{rec.name}</h1>
+        {rec.category && <p className="text-sm text-neutral-400 mt-1">{rec.category}</p>}
+        {rec.description ? <div className="mt-4"><SimplePortableText value={rec.description} /></div> : null}
+      </section>
       {(rec.address || rec.websiteUrl) && (
-        <div className="rounded-lg border border-neutral-200 p-4">
-          {rec.address && <p className="mb-1"><span className="font-semibold">Address:</span> {rec.address}</p>}
+        <section className="rounded-lg border border-neutral-800 bg-neutral-900 p-5">
+          {rec.address && (
+            <p className="mb-1"><span className="font-semibold text-white">Address:</span> {rec.address}</p>
+          )}
           {rec.websiteUrl && (
             <p>
-              <span className="font-semibold">Website:</span>{' '}
-              <a href={rec.websiteUrl} className="text-blue-600 underline" target="_blank" rel="noreferrer">
+              <span className="font-semibold text-white">Website:</span>{' '}
+              <a href={rec.websiteUrl} className="text-blue-400 underline" target="_blank" rel="noreferrer">
                 {rec.websiteUrl}
               </a>
             </p>
           )}
-        </div>
+        </section>
       )}
     </article>
   )
 }
+

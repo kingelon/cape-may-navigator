@@ -9,8 +9,8 @@ type CardProps = {
 
 export default function Card({ href, imageUrl, title, description }: CardProps) {
   const content = (
-    <div className="rounded-xl border border-neutral-200 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
-      {imageUrl ? (
+    <div className="rounded-xl border overflow-hidden bg-neutral-900 border-neutral-800 shadow-sm hover:shadow-md transition-shadow">
+      {imageUrl && (
         <div className="relative w-full h-40">
           <Image
             src={imageUrl}
@@ -20,14 +20,10 @@ export default function Card({ href, imageUrl, title, description }: CardProps) 
             className="object-cover"
           />
         </div>
-      ) : (
-        <div className="w-full h-40 bg-neutral-100" />
       )}
       <div className="p-4">
-        <h3 className="text-base font-semibold mb-1 line-clamp-1">{title}</h3>
-        {description ? (
-          <p className="text-sm text-neutral-600 line-clamp-2">{description}</p>
-        ) : null}
+        <h3 className="text-base font-semibold text-white mb-1 line-clamp-1">{title}</h3>
+        {description ? <p className="text-sm text-neutral-400 line-clamp-2">{description}</p> : null}
       </div>
     </div>
   )

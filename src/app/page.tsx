@@ -25,23 +25,25 @@ export default async function Home() {
   const properties = await fetchProperties()
 
   return (
-    <main className="max-w-5xl mx-auto px-6 py-10">
-      <h1 className="text-3xl font-bold mb-6">Properties</h1>
-      {properties.length === 0 ? (
-        <p className="text-neutral-600">No properties yet. Add one in Studio.</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {properties.map((p) => (
-            <Card
-              key={p.slug}
-              href={`/${p.slug}`}
-              imageUrl={p.mainImageUrl}
-              title={p.name}
-              description={p.welcomeMessage || ''}
-            />
-          ))}
-        </div>
-      )}
-    </main>
+    <div className="min-h-screen bg-neutral-950 text-white">
+      <main className="max-w-6xl mx-auto px-6 py-12">
+        <h1 className="text-4xl font-bold mb-8">Properties</h1>
+        {properties.length === 0 ? (
+          <p className="text-neutral-300">No properties yet. Add one in Studio.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {properties.map((p) => (
+              <Card
+                key={p.slug}
+                href={`/${p.slug}`}
+                imageUrl={p.mainImageUrl}
+                title={p.name}
+                description={p.welcomeMessage || ''}
+              />
+            ))}
+          </div>
+        )}
+      </main>
+    </div>
   )
 }
