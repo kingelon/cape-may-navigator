@@ -27,11 +27,7 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-neutral-950 text-white">
-      <Header
-        title="Cape May Navigator"
-        rootMenu
-        menuProperties={properties.map(p => ({ name: p.name, slug: p.slug }))}
-      />
+      <Header title="Cape May Navigator" rootMenu />
       <main className="max-w-6xl mx-auto px-6 py-12">
         <section className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold mb-3">Welcome to Cape May</h1>
