@@ -1,103 +1,109 @@
-import Image from "next/image";
+import { groq } from 'next-sanity'
+import { client } from '../sanity/lib/client'
 
-export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+export const dynamic = 'force-static'
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+type Property = {
+  name?: string
+  welcomeMessage?: string
+  mainImageUrl?: string
+  wifiNetwork?: string
+  wifiPassword?: string
+  checkoutProcedure?: string
+}
+
+async function fetchProperties(): Promise<Property[]> {
+  const query = groq`*[_type == "property"]{
+    name,
+    welcomeMessage,
+    "mainImageUrl": mainImage.asset->url,
+    wifiNetwork,
+    wifiPassword,
+    checkoutProcedure
+  }`
+  return client.fetch(query)
+}
+
+export default async function Home() {
+  const properties = await fetchProperties()
+  const property = properties?.[0]
+
+  if (!property) {
+    return (
+      <main className="min-h-screen flex items-center justify-center p-8">
+        <div className="max-w-2xl text-center">
+          <h1 className="text-3xl font-semibold">No property found</h1>
+          <p className="text-neutral-600 mt-2">
+            Add a “property” document in Sanity Studio to see content here.
+          </p>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+    )
+  }
+
+  const checkoutSteps = property.checkoutProcedure
+    ? property.checkoutProcedure
+        .split('\n')
+        .map((s) => s.trim())
+        .filter(Boolean)
+    : []
+
+  return (
+    <div className="min-h-screen bg-white text-neutral-900">
+      {property.mainImageUrl && (
+        <div className="w-full h-64 sm:h-80 md:h-96 overflow-hidden">
+          <img
+            src={property.mainImageUrl}
+            alt={property.name ? `${property.name} banner` : 'Property banner'}
+            className="w-full h-full object-cover"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        </div>
+      )}
+
+      <main className="max-w-4xl mx-auto px-6 py-10">
+        {property.name && (
+          <h1 className="text-4xl font-bold text-center mb-4">{property.name}</h1>
+        )}
+
+        {property.welcomeMessage && (
+          <p className="text-lg text-center text-neutral-700 mb-10">
+            {property.welcomeMessage}
+          </p>
+        )}
+
+        {(property.wifiNetwork || property.wifiPassword) && (
+          <section className="mb-10 rounded-lg border border-neutral-200 p-6 bg-neutral-50">
+            <h2 className="text-2xl font-semibold mb-3">Wi‑Fi Details</h2>
+            <div className="space-y-1">
+              {property.wifiNetwork && (
+                <p>
+                  <span className="font-semibold">Network:</span>{' '}
+                  <span>{property.wifiNetwork}</span>
+                </p>
+              )}
+              {property.wifiPassword && (
+                <p>
+                  <span className="font-semibold">Password:</span>{' '}
+                  <code className="font-mono px-1 py-0.5 rounded bg-neutral-200/60">
+                    {property.wifiPassword}
+                  </code>
+                </p>
+              )}
+            </div>
+          </section>
+        )}
+
+        {checkoutSteps.length > 0 && (
+          <section className="mb-6 rounded-lg border border-neutral-200 p-6">
+            <h2 className="text-2xl font-semibold mb-3">Check‑out Procedure</h2>
+            <ol className="list-decimal list-inside space-y-1 text-neutral-800">
+              {checkoutSteps.map((step, idx) => (
+                <li key={idx}>{step}</li>
+              ))}
+            </ol>
+          </section>
+        )}
+      </main>
     </div>
-  );
+  )
 }
