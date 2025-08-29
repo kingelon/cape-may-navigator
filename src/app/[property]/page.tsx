@@ -1,4 +1,5 @@
 import Header from '@/components/Header'
+import FabMenu from '@/components/FabMenu'
 import Card from '@/components/Card'
 import Button from '@/components/Button'
 import { client } from '@/sanity/lib/client'
@@ -61,7 +62,7 @@ export default async function PropertyHome({ params }: Params) {
 
   return (
     <div>
-      <Header title={property.name || 'Property'} backHref="/" backText="Home" />
+      <Header title={property.name || 'Property'} menuForPropertySlug={propertySlug} />
       <div className="max-w-4xl mx-auto px-4 py-6 space-y-8">
       {property.mainImageUrl && (
         <div className="w-full h-48 sm:h-64 md:h-80 overflow-hidden rounded-xl relative">
@@ -152,6 +153,7 @@ export default async function PropertyHome({ params }: Params) {
         </section>
       ) : null}
       </div>
+      
     </div>
   )
 }

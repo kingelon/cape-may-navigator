@@ -1,4 +1,5 @@
 import Header from '@/components/Header'
+import FabMenu from '@/components/FabMenu'
 import { client } from '@/sanity/lib/client'
 import { groq } from 'next-sanity'
 
@@ -26,7 +27,7 @@ export default async function SectionsLayout({ children, params }: Props) {
   const name = await fetchPropertyName(property)
   return (
     <div className="min-h-screen bg-neutral-950 text-white">
-      <Header title={name || 'Property'} backHref={`/${property}`} backText="Back" />
+      <Header title={name || 'Property'} menuForPropertySlug={property} />
       <div className="max-w-4xl mx-auto px-4 py-6">{children}</div>
     </div>
   )

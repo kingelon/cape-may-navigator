@@ -1,3 +1,4 @@
+import Header from '@/components/Header'
 import Card from '@/components/Card'
 import { groq } from 'next-sanity'
 import { client } from '../sanity/lib/client'
@@ -26,12 +27,18 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-neutral-950 text-white">
+      <Header title="Cape May Navigator" rootMenu />
       <main className="max-w-6xl mx-auto px-6 py-12">
-        <h1 className="text-4xl font-bold mb-8">Properties</h1>
+        <section className="mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-3">Welcome to Cape May</h1>
+          <p className="text-neutral-300 text-lg leading-relaxed max-w-3xl">
+            Your salty, sun-soaked dispatch from the shore—what to do, where to eat, and the little secrets locals love. Updated all season long.
+          </p>
+        </section>
         {properties.length === 0 ? (
           <p className="text-neutral-300">No properties yet. Add one in Studio.</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
             {properties.map((p) => (
               <Card
                 key={p.slug}
