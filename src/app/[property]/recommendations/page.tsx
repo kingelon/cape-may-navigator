@@ -4,7 +4,7 @@ import { groq } from 'next-sanity'
 
 export const dynamic = 'force-dynamic'
 
-type Props = { params: { property: string } }
+type Props = { params: Promise<{ property: string }> }
 
 type RecommendationLink = {
   name: string
@@ -21,7 +21,8 @@ async function fetchRecs(propertySlug: string) {
 }
 
 export default async function RecommendationsIndex({ params }: Props) {
-  const data = await fetchRecs(params.property)
+  const { property } = await params
+  const data = await fetchRecs(property)
   const recs: RecommendationLink[] = data?.recommendations || []
 
   if (!recs.length) {
@@ -33,7 +34,7 @@ export default async function RecommendationsIndex({ params }: Props) {
       {recs.map((r: RecommendationLink) => (
         <Card
           key={r.slug}
-          href={`/${params.property}/recommendations/${r.slug}`}
+          href={`/${property}/recommendations/${r.slug}`}
           imageUrl={r.mainImageUrl}
           title={r.name}
           description={r.category}

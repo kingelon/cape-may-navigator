@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 export const dynamic = 'force-dynamic'
 
-type Props = { params: { property: string; slug: string } }
+type Props = { params: Promise<{ property: string; slug: string }> }
 
 type PortableBlock = {
   _type: 'block'
@@ -44,7 +44,8 @@ async function fetchRec(slug: string) {
 }
 
 export default async function RecommendationPage({ params }: Props) {
-  const rec = await fetchRec(params.slug)
+  const { slug } = await params
+  const rec = await fetchRec(slug)
   if (!rec) return <div>Recommendation not found</div>
   return (
     <article className="space-y-4">

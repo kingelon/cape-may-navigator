@@ -6,7 +6,7 @@ export const dynamic = 'force-static'
 
 type Props = {
   children: React.ReactNode
-  params: { property: string }
+  params: Promise<{ property: string }>
 }
 
 async function fetchPropertyName(slug: string): Promise<string | undefined> {
@@ -22,7 +22,8 @@ export async function generateStaticParams() {
 }
 
 export default async function PropertyLayout({ children, params }: Props) {
-  const name = await fetchPropertyName(params.property)
+  const { property } = await params
+  const name = await fetchPropertyName(property)
   return (
     <div className="min-h-screen bg-white text-neutral-900">
       <Header title={name || 'Property'} backHref="/" />

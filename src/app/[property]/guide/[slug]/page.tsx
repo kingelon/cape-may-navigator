@@ -3,7 +3,7 @@ import { groq } from 'next-sanity'
 
 export const dynamic = 'force-dynamic'
 
-type Props = { params: { property: string; slug: string } }
+type Props = { params: Promise<{ property: string; slug: string }> }
 
 type PortableBlock = {
   _type: 'block'
@@ -36,7 +36,8 @@ async function fetchGuide(slug: string) {
 }
 
 export default async function GuidePage({ params }: Props) {
-  const guide = await fetchGuide(params.slug)
+  const { slug } = await params
+  const guide = await fetchGuide(slug)
   if (!guide) return <div>Guide not found</div>
   return (
     <article className="space-y-4">

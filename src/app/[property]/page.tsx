@@ -6,7 +6,7 @@ import Image from 'next/image'
 
 export const dynamic = 'force-static'
 
-type Params = { params: { property: string } }
+type Params = { params: Promise<{ property: string }> }
 
 type GuideLink = { title: string; slug: string }
 type RecommendationLink = {
@@ -47,7 +47,8 @@ async function fetchProperty(slug: string): Promise<PropertyDetail | null> {
 }
 
 export default async function PropertyHome({ params }: Params) {
-  const property = await fetchProperty(params.property)
+  const { property: propertySlug } = await params
+  const property = await fetchProperty(propertySlug)
 
   if (!property) {
     return <div>Property not found</div>
@@ -111,7 +112,7 @@ export default async function PropertyHome({ params }: Params) {
         <section>
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-xl font-semibold">Property Guides</h2>
-            <Button href={`/${params.property}/guide/wifi-details`} variant="secondary">
+            <Button href={`/${propertySlug}/guide/wifi-details`} variant="secondary">
               Example
             </Button>
           </div>
@@ -119,7 +120,7 @@ export default async function PropertyHome({ params }: Params) {
             {property.guides.map((g: GuideLink) => (
               <Card
                 key={g.slug}
-                href={`/${params.property}/guide/${g.slug}`}
+                href={`/${propertySlug}/guide/${g.slug}`}
                 title={g.title}
                 description={null}
               />
@@ -132,7 +133,7 @@ export default async function PropertyHome({ params }: Params) {
         <section>
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-xl font-semibold">Local Recommendations</h2>
-            <Button href={`/${params.property}/recommendations`} variant="secondary">
+            <Button href={`/${propertySlug}/recommendations`} variant="secondary">
               View all
             </Button>
           </div>
@@ -140,7 +141,7 @@ export default async function PropertyHome({ params }: Params) {
             {property.recommendations.map((r: RecommendationLink) => (
               <Card
                 key={r.slug}
-                href={`/${params.property}/recommendations/${r.slug}`}
+                href={`/${propertySlug}/recommendations/${r.slug}`}
                 imageUrl={r.mainImageUrl}
                 title={r.name}
                 description={r.category}
