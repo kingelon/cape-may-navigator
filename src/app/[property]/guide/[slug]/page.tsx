@@ -1,5 +1,6 @@
 import { client } from '@/sanity/lib/client'
 import { groq } from 'next-sanity'
+import type { ElementType } from 'react'
 
 export const dynamic = 'force-dynamic'
 
@@ -17,7 +18,16 @@ function SimplePortableText({ value }: { value: PortableBlock[] }) {
       {value?.map((block, idx) => {
         if (block._type === 'block') {
           const text = block.children?.map((c) => c.text).join('')
-          const Tag = (block.style as keyof JSX.IntrinsicElements) || 'p'
+          const map = {
+            normal: 'p',
+            h1: 'h1',
+            h2: 'h2',
+            h3: 'h3',
+            h4: 'h4',
+            blockquote: 'blockquote',
+          } as const
+          type StyleKey = keyof typeof map
+          const Tag = (map[(block.style as StyleKey) ?? 'normal']) as ElementType
           return (
             <Tag key={idx} className="mb-3">
               {text}
