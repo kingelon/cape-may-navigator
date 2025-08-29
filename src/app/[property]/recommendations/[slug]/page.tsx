@@ -1,5 +1,6 @@
 import { client } from '@/sanity/lib/client'
 import { groq } from 'next-sanity'
+import Image from 'next/image'
 
 export const dynamic = 'force-dynamic'
 
@@ -48,7 +49,15 @@ export default async function RecommendationPage({ params }: Props) {
   return (
     <article className="space-y-4">
       {rec.mainImageUrl && (
-        <img src={rec.mainImageUrl} alt={rec.name} className="w-full h-56 object-cover rounded-lg" />
+        <div className="relative w-full h-56">
+          <Image
+            src={rec.mainImageUrl}
+            alt={rec.name}
+            fill
+            sizes="100vw"
+            className="object-cover rounded-lg"
+          />
+        </div>
       )}
       <h1 className="text-2xl font-semibold">{rec.name}</h1>
       <p className="text-sm text-neutral-600">{rec.category}</p>

@@ -6,6 +6,13 @@ export const dynamic = 'force-dynamic'
 
 type Props = { params: { property: string } }
 
+type RecommendationLink = {
+  name: string
+  category?: string
+  slug: string
+  mainImageUrl?: string
+}
+
 async function fetchRecs(propertySlug: string) {
   const query = groq`*[_type == "property" && slug.current == $slug][0]{
     recommendations[]->{ name, category, "slug": slug.current, "mainImageUrl": mainImage.asset->url }
@@ -15,7 +22,7 @@ async function fetchRecs(propertySlug: string) {
 
 export default async function RecommendationsIndex({ params }: Props) {
   const data = await fetchRecs(params.property)
-  const recs = data?.recommendations || []
+  const recs: RecommendationLink[] = data?.recommendations || []
 
   if (!recs.length) {
     return <div>No recommendations yet.</div>
@@ -23,7 +30,7 @@ export default async function RecommendationsIndex({ params }: Props) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {recs.map((r: any) => (
+      {recs.map((r: RecommendationLink) => (
         <Card
           key={r.slug}
           href={`/${params.property}/recommendations/${r.slug}`}

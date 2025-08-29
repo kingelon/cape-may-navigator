@@ -2,10 +2,29 @@ import Card from '@/components/Card'
 import Button from '@/components/Button'
 import { client } from '@/sanity/lib/client'
 import { groq } from 'next-sanity'
+import Image from 'next/image'
 
 export const dynamic = 'force-static'
 
 type Params = { params: { property: string } }
+
+type GuideLink = { title: string; slug: string }
+type RecommendationLink = {
+  name: string
+  category?: string
+  slug: string
+  mainImageUrl?: string
+}
+type PropertyDetail = {
+  name?: string
+  welcomeMessage?: string
+  mainImageUrl?: string
+  wifiNetwork?: string
+  wifiPassword?: string
+  checkoutProcedure?: string[]
+  guides?: GuideLink[]
+  recommendations?: RecommendationLink[]
+}
 
 export async function generateStaticParams() {
   const query = groq`*[_type == "property" && defined(slug.current)]{ "slug": slug.current }`
@@ -13,7 +32,7 @@ export async function generateStaticParams() {
   return slugs.map(({ slug }) => ({ property: slug }))
 }
 
-async function fetchProperty(slug: string) {
+async function fetchProperty(slug: string): Promise<PropertyDetail | null> {
   const query = groq`*[_type == "property" && slug.current == $slug][0]{
     name,
     welcomeMessage,
@@ -41,11 +60,13 @@ export default async function PropertyHome({ params }: Params) {
   return (
     <div className="space-y-8">
       {property.mainImageUrl && (
-        <div className="w-full h-48 sm:h-64 md:h-80 overflow-hidden rounded-xl">
-          <img
+        <div className="w-full h-48 sm:h-64 md:h-80 overflow-hidden rounded-xl relative">
+          <Image
             src={property.mainImageUrl}
             alt={property.name ? `${property.name} banner` : 'Property banner'}
-            className="w-full h-full object-cover"
+            fill
+            sizes="100vw"
+            className="object-cover"
           />
         </div>
       )}
@@ -95,7 +116,7 @@ export default async function PropertyHome({ params }: Params) {
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {property.guides.map((g: any) => (
+            {property.guides.map((g: GuideLink) => (
               <Card
                 key={g.slug}
                 href={`/${params.property}/guide/${g.slug}`}
@@ -116,7 +137,7 @@ export default async function PropertyHome({ params }: Params) {
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {property.recommendations.map((r: any) => (
+            {property.recommendations.map((r: RecommendationLink) => (
               <Card
                 key={r.slug}
                 href={`/${params.property}/recommendations/${r.slug}`}

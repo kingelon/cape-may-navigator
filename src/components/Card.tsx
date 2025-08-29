@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 type CardProps = {
   href?: string
   imageUrl?: string | null
@@ -9,7 +11,15 @@ export default function Card({ href, imageUrl, title, description }: CardProps) 
   const content = (
     <div className="rounded-xl border border-neutral-200 overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
       {imageUrl ? (
-        <img src={imageUrl} alt={title} className="w-full h-40 object-cover" />
+        <div className="relative w-full h-40">
+          <Image
+            src={imageUrl}
+            alt={title}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 33vw"
+            className="object-cover"
+          />
+        </div>
       ) : (
         <div className="w-full h-40 bg-neutral-100" />
       )}
@@ -32,4 +42,3 @@ export default function Card({ href, imageUrl, title, description }: CardProps) 
 
   return content
 }
-
