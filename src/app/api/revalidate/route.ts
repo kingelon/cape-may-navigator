@@ -1,12 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
 
+type WebhookBody = {
+  _type?: string
+  type?: string
+  document?: { _type?: string }
+  payload?: { _type?: string }
+  event?: { type?: string }
+  secret?: string
+}
+
 export async function POST(req: NextRequest) {
   const urlSecret = req.nextUrl.searchParams.get('secret') || undefined
   const headerSecret =
     req.headers.get('x-revalidate-secret') || req.headers.get('x-sanity-secret') || undefined
-  const body = await req.json().catch(() => ({} as any))
-  const bodySecret = (body?.secret as string | undefined) || undefined
+  let body: WebhookBody | undefined
+  try {
+    body = (await req.json()) as WebhookBody
+  } catch {
+    body = undefined
+  }
+  const bodySecret = body?.secret
 
   const provided = (urlSecret || headerSecret || bodySecret || '').toString().trim()
   const expected = (process.env.REVALIDATE_SECRET || '').toString().trim()
