@@ -44,7 +44,7 @@ async function fetchProperty(slug: string): Promise<PropertyDetail | null> {
     guides[]->{ title, "slug": slug.current, "mainImageUrl": mainImage.asset->url },
     recommendations[]->{ name, category, "slug": slug.current, "mainImageUrl": mainImage.asset->url }
   }`
-  return client.fetch(query, { slug })
+  return client.fetch(query, { slug }, { next: { tags: ['sanity:property', 'sanity:guide', 'sanity:recommendation', 'sanity:all'] } })
 }
 
 export default async function PropertyHome({ params }: Params) {

@@ -43,7 +43,7 @@ function SimplePortableText({ value }: { value: PortableBlock[] }) {
 
 async function fetchGuide(slug: string) {
   const query = groq`*[_type == "guide" && slug.current == $slug][0]{ title, content, "mainImageUrl": mainImage.asset->url }`
-  return client.fetch(query, { slug })
+  return client.fetch(query, { slug }, { next: { tags: ['sanity:guide', 'sanity:all'] } })
 }
 
 export default async function GuidePage({ params }: Props) {
@@ -64,4 +64,3 @@ export default async function GuidePage({ params }: Props) {
     </article>
   )
 }
-

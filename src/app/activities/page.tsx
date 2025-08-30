@@ -13,7 +13,7 @@ async function fetchActivities(): Promise<Activity[]> {
     "slug": slug.current,
     "propertySlug": *[_type=="property" && references(^._id)][0].slug.current
   }`
-  return client.fetch(query)
+  return client.fetch(query, {}, { next: { tags: ['sanity:recommendation', 'sanity:all'] } })
 }
 
 export default async function ActivitiesPage() {
@@ -52,4 +52,3 @@ export default async function ActivitiesPage() {
     </div>
   )
 }
-

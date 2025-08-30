@@ -17,7 +17,7 @@ async function fetchRecs(propertySlug: string) {
   const query = groq`*[_type == "property" && slug.current == $slug][0]{
     recommendations[]->{ name, category, "slug": slug.current, "mainImageUrl": mainImage.asset->url }
   }`
-  return client.fetch(query, { slug: propertySlug })
+  return client.fetch(query, { slug: propertySlug }, { next: { tags: ['sanity:recommendation', 'sanity:property', 'sanity:all'] } })
 }
 
 export default async function RecommendationsIndex({ params }: Props) {
@@ -43,4 +43,3 @@ export default async function RecommendationsIndex({ params }: Props) {
     </div>
   )
 }
-

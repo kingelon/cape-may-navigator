@@ -12,7 +12,7 @@ async function fetchGuides(): Promise<Guide[]> {
     "slug": slug.current,
     "propertySlug": *[_type=="property" && references(^._id)][0].slug.current
   }`
-  return client.fetch(query)
+  return client.fetch(query, {}, { next: { tags: ['sanity:guide', 'sanity:all'] } })
 }
 
 export default async function GuidesPage() {
@@ -48,4 +48,3 @@ export default async function GuidesPage() {
     </div>
   )
 }
-

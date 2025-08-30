@@ -50,7 +50,7 @@ async function fetchRec(slug: string) {
     address,
     websiteUrl
   }`
-  return client.fetch(query, { slug })
+  return client.fetch(query, { slug }, { next: { tags: ['sanity:recommendation', 'sanity:all'] } })
 }
 
 export default async function RecommendationPage({ params }: Props) {
@@ -93,4 +93,3 @@ export default async function RecommendationPage({ params }: Props) {
     </article>
   )
 }
-

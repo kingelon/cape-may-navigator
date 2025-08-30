@@ -19,7 +19,7 @@ async function fetchProperties(): Promise<PropertyCard[]> {
     "mainImageUrl": mainImage.asset->url,
     welcomeMessage
   }`
-  return client.fetch(query)
+  return client.fetch(query, {}, { next: { tags: ['sanity:property', 'sanity:all'] } })
 }
 
 export default async function Home() {

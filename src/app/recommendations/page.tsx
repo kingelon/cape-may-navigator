@@ -21,7 +21,7 @@ async function fetchRecommendations(): Promise<Rec[]> {
     "propertySlug": *[_type=="property" && references(^._id)][0].slug.current,
     "mainImageUrl": mainImage.asset->url
   }`
-  return client.fetch(query)
+  return client.fetch(query, {}, { next: { tags: ['sanity:recommendation', 'sanity:all'] } })
 }
 
 export default async function RecommendationsPage() {
@@ -50,4 +50,3 @@ export default async function RecommendationsPage() {
     </div>
   )
 }
-
